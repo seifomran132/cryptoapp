@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import millify from "millify";
 import { Link } from "react-router-dom";
 import { Card, Row, Col, Input, Typography } from "antd";
@@ -8,14 +8,23 @@ import { useGetCryptoQuery } from "../services/CryptoAPI";
 function Cryptocurrencies(props) {
   const count = props.simplified ? 10 : 100;
   const { data, isFetching } = useGetCryptoQuery(count);
-  const coins = data?.data?.coins;
+
+  const [cryptos, setCryptos] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const newCryptoList = data?.data?.coins.filter((coin) =>
+      coin.name.toLowerCase().includes(searchTerm)
+    );
+    setCryptos(newCryptoList);
+  }, [searchTerm, data]);
 
   if (isFetching) {
     return "Loading...";
   }
 
-  const cryptoCoins = coins?.map((coin) => (
-    <Col xs={24} sm={12} lg={6} key={coin.id} className="crypto-card">
+  const cryptoCoins = cryptos?.map((coin) => (
+    <Col xs={24} sm={12} lg={6} key={coin.uuid} className="crypto-card">
       <Link to={`/crypto/${coin.id}`}>
         <Card
           title={`${coin.rank}. ${coin.name}`}
@@ -32,9 +41,16 @@ function Cryptocurrencies(props) {
 
   return (
     <React.Fragment>
-      <Typography.Title level={2} className="heading">
-        Top 100 Cryptocurrencies
-      </Typography.Title>
+      {!props.simplified && (
+        <div>
+          <Input
+            placeholder="Search Cryptocurrencies"
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
+          />
+        </div>
+      )}
 
       <Row gutter={[32, 32]} className="crypto-card-container">
         {cryptoCoins}
