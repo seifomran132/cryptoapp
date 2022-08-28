@@ -21,7 +21,7 @@ function Main(props) {
             exact
           ></Route>
           <Route
-            path="/cryptodetails/:coinId"
+            path="/crypto/:coinId"
             element={<Cryptodetails />}
             exact
           ></Route>

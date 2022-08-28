@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import millify from "millify";
 import { Link } from "react-router-dom";
 import { Card, Row, Col, Input, Typography } from "antd";
-
 import { useGetCryptoQuery } from "../services/CryptoAPI";
 
 function Cryptocurrencies(props) {
@@ -25,7 +24,7 @@ function Cryptocurrencies(props) {
 
   const cryptoCoins = cryptos?.map((coin) => (
     <Col xs={24} sm={12} lg={6} key={coin.uuid} className="crypto-card">
-      <Link to={`/crypto/${coin.id}`}>
+      <Link to={`/crypto/${coin.uuid}`}>
         <Card
           title={`${coin.rank}. ${coin.name}`}
           extra={<img src={coin.iconUrl} className="crypto-image"></img>}
